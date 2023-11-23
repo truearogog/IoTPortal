@@ -1,0 +1,60 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34309.116
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IoTPortal.Web", "IoTPortal.Web\IoTPortal.Web.csproj", "{34B378AC-4EB6-42DB-98FB-0721EF94A410}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DB79F247-1706-47F9-8A2E-966F75E3049D}"
+	ProjectSection(SolutionItems) = preProject
+		directory.build.props = directory.build.props
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoTPortal.Core", "IoTPortal.Core\IoTPortal.Core.csproj", "{6F827E78-8D28-4352-9896-9D4138C7CA83}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoTPortal.Data.EF", "IoTPortal.Data.EF\IoTPortal.Data.EF.csproj", "{A5F70E5C-63DA-4B62-AD17-C5EE2066308B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoTPortal.Data.EF.SQLServer", "IoTPortal.Data.EF.SQLServer\IoTPortal.Data.EF.SQLServer.csproj", "{257F3386-E238-4D97-828B-02D88DF63E5B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoTPortal.Identity", "IoTPortal.Identity\IoTPortal.Identity.csproj", "{CDF3B834-9E5F-4E65-B451-F65126383ADC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoTPortal.Identity.SQLServer", "IoTPortal.Identity.SQLServer\IoTPortal.Identity.SQLServer.csproj", "{6513DF33-A80A-4C63-B6B2-3A3E9BCBD816}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{34B378AC-4EB6-42DB-98FB-0721EF94A410}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34B378AC-4EB6-42DB-98FB-0721EF94A410}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34B378AC-4EB6-42DB-98FB-0721EF94A410}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34B378AC-4EB6-42DB-98FB-0721EF94A410}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F827E78-8D28-4352-9896-9D4138C7CA83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F827E78-8D28-4352-9896-9D4138C7CA83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F827E78-8D28-4352-9896-9D4138C7CA83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F827E78-8D28-4352-9896-9D4138C7CA83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5F70E5C-63DA-4B62-AD17-C5EE2066308B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5F70E5C-63DA-4B62-AD17-C5EE2066308B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5F70E5C-63DA-4B62-AD17-C5EE2066308B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5F70E5C-63DA-4B62-AD17-C5EE2066308B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{257F3386-E238-4D97-828B-02D88DF63E5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{257F3386-E238-4D97-828B-02D88DF63E5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{257F3386-E238-4D97-828B-02D88DF63E5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{257F3386-E238-4D97-828B-02D88DF63E5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDF3B834-9E5F-4E65-B451-F65126383ADC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDF3B834-9E5F-4E65-B451-F65126383ADC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDF3B834-9E5F-4E65-B451-F65126383ADC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDF3B834-9E5F-4E65-B451-F65126383ADC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6513DF33-A80A-4C63-B6B2-3A3E9BCBD816}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6513DF33-A80A-4C63-B6B2-3A3E9BCBD816}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6513DF33-A80A-4C63-B6B2-3A3E9BCBD816}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6513DF33-A80A-4C63-B6B2-3A3E9BCBD816}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {69050189-B997-4D14-9DE8-A3628FBBD485}
+	EndGlobalSection
+EndGlobal
