@@ -1,0 +1,18 @@
+﻿@page
+@model IoTPortal.Web.Pages.MyDevices.IndexModel
+@{
+}
+
+<div class="container" id="devices"></div>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/my-devices.js"></script>
+    <script>
+        $(function () {
+            MyDevicesJs.init({
+                myDevicesUrl: '@Html.Raw(Url.Page("/MyDevices/Index", "DeviceGrid"))'
+            });
+            MyDevicesJs.loadMyDevices();
+        });
+    </script>
+}

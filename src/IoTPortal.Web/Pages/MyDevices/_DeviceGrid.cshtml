@@ -1,0 +1,23 @@
+﻿@model IEnumerable<Device>
+@{
+    Layout = null;
+
+    void RenderDeviceCard(Device model)
+    {
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">@(model.Name)</h5>
+                    <p class="card-text">@(model.Description)</p>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    @foreach (var device in Model)
+    {
+        RenderDeviceCard(device);
+    }
+</div>
