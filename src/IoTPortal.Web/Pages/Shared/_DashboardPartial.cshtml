@@ -1,0 +1,18 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using IoTPortal.Identity.Models
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <li class="nav-item dropdown">
+        <a class="nav-link text-light dropdown-toggle" href="#" id="navbar-my-devices-dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Dashboard
+        </a>
+        <ul class="dropdown-menu bg-dark" aria-labelledby="navbar-my-devices-dropdown">
+            <li><a class="dropdown-item text-secondary" asp-page="/Dashboard/Index">Dashboard</a></li>
+            <li><a class="dropdown-item text-secondary" asp-page="/MyDevices/Index">My Devices</a></li>
+            <li><a class="dropdown-item text-secondary" asp-page="/MyDevices/CreateNew">Create New</a></li>
+        </ul>
+    </li>
+}

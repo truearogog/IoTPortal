@@ -1,23 +1,26 @@
-﻿@model IEnumerable<Device>
+﻿@using IoTPortal.Web.Helpers
+@using Microsoft.AspNetCore.Html
+@model IEnumerable<Device>
 @{
     Layout = null;
 
-    void RenderDeviceCard(Device model)
+    async Task RenderDeviceCard(Device model)
     {
         <div class="col">
             <div class="card h-100">
                 <div class="card-body">
                     <h5 class="card-title">@(model.Name)</h5>
                     <p class="card-text">@(model.Description)</p>
+                    <a class="btn btn-primary stretched-link" asp-page="/Device/Index" asp-route-id="@(model.Id)">Go to device</a>
                 </div>
             </div>
         </div>
     }
 }
 
-<div class="row row-cols-1 row-cols-md-3 g-4">
+<div class="row row-cols-1 row-cols-md-3 g-4 pt-2">
     @foreach (var device in Model)
     {
-        RenderDeviceCard(device);
+        await RenderDeviceCard(device);
     }
 </div>

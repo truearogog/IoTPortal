@@ -7,6 +7,8 @@ namespace IoTPortal.Core.Repositories
     {
         IQueryable<Device> GetAll();
         IQueryable<Device> GetAll(Expression<Func<Device, bool>> predicate);
+        Device GetById(Guid id);
+        Task<Device> GetByIdAsync(Guid id);
         Task Create(Device model);
         Task CreateRange(IEnumerable<Device> models);
         Task Update(Device model);

@@ -41,6 +41,7 @@ namespace IoTPortal.Data.EF.Extensions
         {
             // Register repositories
             services.Add(new ServiceDescriptor(typeof(IDeviceRepository), typeof(DeviceRepository), scope));
+            services.Add(new ServiceDescriptor(typeof(IUserDeviceRepository), typeof(UserDeviceRepository), scope));
 
             // Register services
             services.Add(new ServiceDescriptor(typeof(IAppDb), typeof(T), scope));
@@ -49,6 +50,7 @@ namespace IoTPortal.Data.EF.Extensions
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile(typeof(DeviceProfile));
+                cfg.AddProfile(typeof(UserDeviceRoleProfile));
             });
             services.Add(new ServiceDescriptor(typeof(IMapper), new Mapper(config)));
 

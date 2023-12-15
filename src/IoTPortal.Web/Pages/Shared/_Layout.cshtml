@@ -1,49 +1,94 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@using IoTPortal.Web.Helpers
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="auto">
 <head>
+    <script src="~/js/theme.js"></script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - IoTPortal.Web</title>
+    <title>@ViewData["Title"] - IoTPortal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/IoTPortal.Web.styles.css" asp-append-version="true" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbark-dark bg-dark mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">IoTPortal.Web</a>
+                <a class="navbar-brand text-light" asp-area="" asp-page="/Index">IoTPortal</a>
+
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+                    <span class="navbar-toggler-icon text-light"></span>
                 </button>
+
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
+                        <partial name="_DashboardPartial" />
                         <li class="nav-item">
-                            <partial name="_MyDevicesPartial" />
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
+                            <a class="nav-link text-light" asp-area="" asp-page="/Privacy">Privacy</a>
                         </li>
                     </ul>
                     <partial name="_LoginPartial" />
+                    <partial name="_ThemePartial" />
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
+    @if (this.GetPageAccessType() == PageAccessType.Public)
+    {
         <div class="container">
-            &copy; 2023 - IoTPortal.Web - <a asp-area="" asp-page="/Privacy">Privacy</a>
+            <main role="main">
+                @RenderBody()
+            </main>
+        </div>
+    }
+    else
+    {
+        <div class="container-fluid">
+            <div class="row">
+                <nav class="col-md-2 d-none d-md-block sidebar">
+                    <div class="sidebar-sticky">
+                        <ul class="nav nav-pills flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/Dashboard/Index">Dashboard</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/MyDevices/Index">My Devices</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/MyDevices/CreateNew">Create New</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+
+                <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+                    @RenderBody()
+                </main>
+            </div>
+        </div>
+    }
+
+    
+    <footer class="footer py-3 my-4">
+        <div class="container border-top d-flex flex-wrap justify-content-between align-items-center">
+            <div class="col-md-4 d-flex align-items-center">
+                <span class="mb-3 mb-md-0 text-body-secondary">© 2023 IoTPortal</span>
+            </div>
+            <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
+                <li class="ms-3">
+                    <a class="text-body-secondary" href="https://github.com/truearogog/IoTPortal"><i class="fa-brands fa-github fa-lg"></i></a>
+                </li>
+                <li class="ms-3">
+                    <a class="text-body-secondary" href="https://www.linkedin.com/in/artox/"><i class="fa-brands fa-linkedin fa-lg"></i></a>
+                </li>
+            </ul>
         </div>
     </footer>
-
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-
+    <script src="https://kit.fontawesome.com/aadb14d1b1.js" crossorigin="anonymous"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -7,6 +7,7 @@ namespace IoTPortal.Data
     public interface IAppDb
     {
         DbSet<DeviceEntity> Devices { get; set; }
+        DbSet<UserDeviceRoleEntity> UserDeviceRoles { get; set; }
 
         Task InsertRangeAsync<T>(IEnumerable<T> entities, BulkConfig? bulkConfig = null,
             Action<decimal>? progress = null, Type? type = null, CancellationToken cancellationToken = default) where T : class;

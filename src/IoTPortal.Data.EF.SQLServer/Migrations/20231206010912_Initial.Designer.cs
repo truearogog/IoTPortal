@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IoTPortal.Data.EF.SQLServer.Migrations
 {
     [DbContext(typeof(SQLServerAppDb))]
-    [Migration("20231126211222_Initial")]
+    [Migration("20231206010912_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -38,19 +38,51 @@ namespace IoTPortal.Data.EF.SQLServer.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.ToTable("Devices");
+                });
+
+            modelBuilder.Entity("IoTPortal.Data.EF.Entities.UserDeviceRoleEntity", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<Guid>("DeviceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DeviceRole")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "DeviceId");
+
+                    b.HasIndex("DeviceId");
+
+                    b.ToTable("UserDeviceRoles");
+                });
+
+            modelBuilder.Entity("IoTPortal.Data.EF.Entities.UserDeviceRoleEntity", b =>
+                {
+                    b.HasOne("IoTPortal.Data.EF.Entities.DeviceEntity", "Device")
+                        .WithMany("UserDeviceRoles")
+                        .HasForeignKey("DeviceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Device");
+                });
+
+            modelBuilder.Entity("IoTPortal.Data.EF.Entities.DeviceEntity", b =>
+                {
+                    b.Navigation("UserDeviceRoles");
                 });
 #pragma warning restore 612, 618
         }
