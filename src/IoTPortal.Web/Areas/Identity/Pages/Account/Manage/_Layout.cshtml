@@ -1,5 +1,7 @@
-﻿@{
-    if (ViewData.TryGetValue("ParentLayout", out var parentLayout) && parentLayout !=  null)
+﻿@using IoTPortal.Web.Helpers
+@{
+    this.SetPageType(PageType.ManageAccount);
+    if (ViewData.TryGetValue("ParentLayout", out var parentLayout) && parentLayout != null)
     {
         Layout = parentLayout.ToString();
     }
@@ -9,18 +11,16 @@
     }
 }
 
-<h1>Manage your account</h1>
 
-<div>
-    <h2>Change your account settings</h2>
-    <hr />
-    <div class="row">
-        <div class="col-md-3">
-            <partial name="_ManageNav" />
-        </div>
-        <div class="col-md-9">
-            @RenderBody()
-        </div>
+<div class="row">
+    <div class="col-md-3 border-end">
+        <partial name="_ManageNav" />
+    </div>
+    <div class="col-md-9">
+        <h3>Manage your account</h3>
+        <h2>Change your account settings</h2>
+        <hr />
+        @RenderBody()
     </div>
 </div>
 

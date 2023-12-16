@@ -4,14 +4,14 @@ namespace IoTPortal.Web.Helpers
 {
     public static class RazorPageExtensions
     {
-        public static void SetPageAccessType(this IRazorPage page, PageAccessType type)
+        public static void SetPageType(this IRazorPage page, PageType type)
         {
-            page.ViewContext.ViewData[nameof(PageAccessType)] = type;
+            page.ViewContext.ViewData[nameof(PageType)] = type;
         }
 
-        public static PageAccessType GetPageAccessType(this IRazorPage page)
+        public static PageType GetPageType(this IRazorPage page)
         {
-            return (PageAccessType?)page.ViewContext.ViewData[nameof(PageAccessType)] ?? PageAccessType.Public;
+            return (PageType?)page.ViewContext.ViewData[nameof(PageType)] ?? PageType.Public;
         }
     }
 }

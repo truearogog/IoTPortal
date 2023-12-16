@@ -1,7 +1,9 @@
 ﻿@page
-@using IoTPortal.Web.Helpers
 @model IoTPortal.Web.Pages.MyDevices.IndexModel
 @{
+    ViewData["ActivePage"] = DashboardNavPages.MyDevices;
+    ViewData["PrivateTitle"] = "My Devices";
+    ViewData["PrivateSubtitle"] = "Overview and manage your devices";
 }
 
 <div id="devices"></div>

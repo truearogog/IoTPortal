@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace IoTPortal.Web.Pages.Device
 {
-    public class CreateNewModel(IDeviceRepository deviceRepository, UserManager<User> userManager) : AuthPageModelBase(userManager)
+    public class CreateNewDeviceModel(IDeviceRepository deviceRepository, UserManager<User> userManager) : AuthPageModelBase(userManager)
     {
         private readonly IDeviceRepository _deviceRepository = deviceRepository;
 

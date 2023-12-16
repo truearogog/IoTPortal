@@ -1,0 +1,13 @@
+﻿<nav class="sidebar sidebar-sticky">
+    <ul class="nav nav-pills flex-column">
+        <li class="nav-item text-nowrap">
+            <a class="nav-link @DashboardNavPages.DashboardNavClass(ViewContext)" asp-page="/Dashboard/Index">Dashboard</a>
+        </li>
+        <li class="nav-item text-nowrap">
+            <a class="nav-link @DashboardNavPages.MyDevicesNavClass(ViewContext)" asp-page="/MyDevices/Index">My Devices</a>
+        </li>
+        <li class="nav-item text-nowrap">
+            <a class="nav-link @DashboardNavPages.CreateNewDeviceNavClass(ViewContext)" asp-page="/Device/CreateNewDevice">Create New Device</a>
+        </li>
+    </ul>
+</nav>

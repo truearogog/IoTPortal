@@ -12,7 +12,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbark-dark bg-dark mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbark-dark bg-dark mb-3 border-bottom">
             <div class="container">
                 <a class="navbar-brand text-light" asp-area="" asp-page="/Index">IoTPortal</a>
 
@@ -35,46 +35,47 @@
         </nav>
     </header>
 
-    @if (this.GetPageAccessType() == PageAccessType.Public)
+    @switch (this.GetPageType())
     {
-        <div class="container">
-            <main role="main">
-                @RenderBody()
-            </main>
-        </div>
-    }
-    else
-    {
-        <div class="container-fluid">
-            <div class="row">
-                <nav class="col-md-2 d-none d-md-block sidebar">
-                    <div class="sidebar-sticky">
-                        <ul class="nav nav-pills flex-column">
-                            <li class="nav-item">
-                                <a class="nav-link" asp-page="/Dashboard/Index">Dashboard</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-page="/MyDevices/Index">My Devices</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-page="/MyDevices/CreateNew">Create New</a>
-                            </li>
-                        </ul>
-                    </div>
-                </nav>
-
-                <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+        case PageType.Public:
+            <div class="container">
+                <main role="main">
                     @RenderBody()
                 </main>
             </div>
-        </div>
+            break;
+        case PageType.Dashboard:
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-3 border-end">
+                        <partial name="_DashboardNavPartial" />
+                    </div>
+                    <div class="col-md-9 pt-3 px-4">
+                        <h3>@ViewData["PrivateTitle"]</h3>
+                        @if (ViewData.TryGetValue("PrivateSubtitle", out var privateSubtitle))
+                        {
+                            <h4>@privateSubtitle</h4>
+                        }
+                        <main role="main">
+                            @RenderBody()
+                        </main>
+                    </div>
+                </div>
+            </div>
+            break;
+        case PageType.ManageAccount:
+            <div class="container-fluid">
+                <main role="main">
+                    @RenderBody()
+                </main>
+            </div>
+            break;
     }
-
     
     <footer class="footer py-3 my-4">
         <div class="container border-top d-flex flex-wrap justify-content-between align-items-center">
             <div class="col-md-4 d-flex align-items-center">
-                <span class="mb-3 mb-md-0 text-body-secondary">© 2023 IoTPortal</span>
+                <span class="mb-3 mb-md-0 text-body-secondary">© 2023 IoTPortal, Artjoms Strelkovs</span>
             </div>
             <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
                 <li class="ms-3">

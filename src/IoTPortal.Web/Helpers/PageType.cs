@@ -1,8 +1,9 @@
 ﻿namespace IoTPortal.Web.Helpers
 {
-    public enum PageAccessType
+    public enum PageType
     {
         Public,
-        Private
+        Dashboard,
+        ManageAccount
     }
 }
