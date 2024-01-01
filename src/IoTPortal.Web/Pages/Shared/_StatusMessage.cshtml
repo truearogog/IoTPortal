@@ -1,0 +1,10 @@
+﻿@using IoTPortal.Web.Models
+@model StatusMessageModel?
+
+@if (Model != null && Model.Message != null)
+{
+    <div class="alert alert-@(Model.Status ? "success" : "danger") alert-dismissible" role="alert">
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        @Model.Message
+    </div>
+}

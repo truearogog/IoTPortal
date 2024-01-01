@@ -1,6 +1,7 @@
 ﻿using IoTPortal.Identity.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace IoTPortal.Web.Pages
@@ -9,6 +10,9 @@ namespace IoTPortal.Web.Pages
     public abstract class AuthPageModelBase(UserManager<User> userManager) : PageModel
     {
         protected readonly UserManager<User> UserManager = userManager;
-        protected string? UserId => UserManager.GetUserId(User);
+        [BindProperty]
+        public string? UserId => UserManager.GetUserId(User);
+
+        protected IActionResult AccessDenied() => RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
     }
 }

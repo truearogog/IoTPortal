@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
 <head>
-    <script src="~/js/theme.js"></script>
+    <script type="text/javascript" src="~/js/theme.js"></script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - IoTPortal</title>
@@ -47,14 +47,14 @@
         case PageType.Dashboard:
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-md-3 border-end">
+                    <div class="col-md-3 col-lg-3 col-xl-2 border-end">
                         <partial name="_DashboardNavPartial" />
                     </div>
-                    <div class="col-md-9 pt-3 px-4">
+                    <div class="col-md-9 container">
                         <h3>@ViewData["PrivateTitle"]</h3>
                         @if (ViewData.TryGetValue("PrivateSubtitle", out var privateSubtitle))
                         {
-                            <h4>@privateSubtitle</h4>
+                            <h5>@privateSubtitle</h5>
                         }
                         <main role="main">
                             @RenderBody()
@@ -72,19 +72,21 @@
             break;
     }
     
-    <footer class="footer py-3 my-4">
-        <div class="container border-top d-flex flex-wrap justify-content-between align-items-center">
-            <div class="col-md-4 d-flex align-items-center">
-                <span class="mb-3 mb-md-0 text-body-secondary">© 2023 IoTPortal, Artjoms Strelkovs</span>
+    <footer class="footer py-3">
+        <div class="border-top">
+            <div class="container d-flex flex-wrap justify-content-between align-items-center">
+                <div class="col-md-4 d-flex align-items-center">
+                    <span class="mb-3 mb-md-0 text-body-secondary text-nowrap">© 2023 IoTPortal, Artjoms Strelkovs</span>
+                </div>
+                <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
+                    <li class="ms-3">
+                        <a class="text-body-secondary" href="https://github.com/truearogog/IoTPortal"><i class="fa-brands fa-github fa-lg"></i></a>
+                    </li>
+                    <li class="ms-3">
+                        <a class="text-body-secondary" href="https://www.linkedin.com/in/artox/"><i class="fa-brands fa-linkedin fa-lg"></i></a>
+                    </li>
+                </ul>
             </div>
-            <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
-                <li class="ms-3">
-                    <a class="text-body-secondary" href="https://github.com/truearogog/IoTPortal"><i class="fa-brands fa-github fa-lg"></i></a>
-                </li>
-                <li class="ms-3">
-                    <a class="text-body-secondary" href="https://www.linkedin.com/in/artox/"><i class="fa-brands fa-linkedin fa-lg"></i></a>
-                </li>
-            </ul>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

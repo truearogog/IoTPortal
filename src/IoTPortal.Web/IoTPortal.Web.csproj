@@ -14,9 +14,13 @@
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="$(MicrosoftVisualStudioWebCodeGenerationDesignVersion)" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="$(MicrosoftEntityFrameworkCoreVersion)" PrivateAssets="all" />
 		<PackageReference Include="NonFactors.Grid.Mvc6" Version="$(NonFactorsGridMvc6Version)" />
+		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="$(SwaggerVersion)" />
+		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="$(SwaggerVersion)" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\IoTPortal.Framework\IoTPortal.Framework.csproj" />
+		<ProjectReference Include="..\IoTPortal.Services\IoTPortal.Services.csproj" />
 		<ProjectReference Include="..\IoTPortal.Core\IoTPortal.Core.csproj" />
 		<ProjectReference Include="..\IoTPortal.Data.EF.SQLServer\IoTPortal.Data.EF.SQLServer.csproj" />
 		<ProjectReference Include="..\IoTPortal.Data.EF\IoTPortal.Data.EF.csproj" />

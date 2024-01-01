@@ -21,5 +21,6 @@
 		<EFCoreBulkExtensionsVersion>8.0.0-rc.1.2</EFCoreBulkExtensionsVersion>
 		<AutoMapperVersion>12.0.1</AutoMapperVersion>
 		<NonFactorsGridMvc6Version>7.2.0</NonFactorsGridMvc6Version>
+		<SwaggerVersion>6.5.0</SwaggerVersion>
 	</PropertyGroup>
 </Project>

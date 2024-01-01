@@ -4,7 +4,7 @@ using IoTPortal.Data.EF.Entities;
 
 namespace IoTPortal.Data.EF.Profiles
 {
-    internal class DeviceProfile : Profile
+    public class DeviceProfile : Profile
     {
         public DeviceProfile()
         {

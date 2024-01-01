@@ -1,16 +1,17 @@
-using IoTPortal.Core.Repositories;
+#nullable disable
+
+using IoTPortal.Core.Services;
 using IoTPortal.Identity.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace IoTPortal.Web.Pages.MyDevices
 {
     [Authorize]
-    public class IndexModel(IUserDeviceRepository userDeviceRepository, UserManager<User> userManager) : AuthPageModelBase(userManager)
+    public class IndexModel(IDeviceService deviceService, UserManager<User> userManager) : AuthPageModelBase(userManager)
     {
-        private readonly IUserDeviceRepository _userDeviceRepository = userDeviceRepository;
+        private readonly IDeviceService _deviceService = deviceService;
 
         public void OnGet()
         {
@@ -18,10 +19,7 @@ namespace IoTPortal.Web.Pages.MyDevices
 
         public async Task<IActionResult> OnGetDeviceGridAsync()
         {
-            var userId = UserId;
-            var devices = string.IsNullOrEmpty(userId)
-                ? Enumerable.Empty<Core.Models.Device>()
-                : (await _userDeviceRepository.GetForUser(userId).Select(x => x.Device).ToListAsync()).OfType<Core.Models.Device>();
+            var devices = await _deviceService.GetDevicesForUser(UserId);
             return Partial("./_DeviceGrid", devices);
         }
     }

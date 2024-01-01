@@ -1,14 +1,14 @@
 ﻿MyDevicesJs = (function () {
-    let defaults = {
+    let config = {
         myDevicesUrl: ''
     };
 
     function init(parameters) {
-        $.extend(defaults, parameters);
+        $.extend(config, parameters);
     }
 
     function loadMyDevices() {
-        $('#devices').load(defaults.myDevicesUrl);
+        $('#devices').load(config.myDevicesUrl);
     }
 
     return {

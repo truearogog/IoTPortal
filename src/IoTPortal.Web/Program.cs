@@ -3,7 +3,9 @@ using IoTPortal.Data.EF.SQLServer;
 using IoTPortal.Identity.Extensions;
 using IoTPortal.Identity.Models;
 using IoTPortal.Identity.SQLServer;
+using IoTPortal.Services.Extensions;
 using Microsoft.EntityFrameworkCore;
+
 namespace IoTPortal.Web
 {
     public class Program
@@ -12,6 +14,7 @@ namespace IoTPortal.Web
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddServices();
             builder.Services.AddAppEF<SQLServerAppDb>(options
                 => options.UseSqlServer(builder.Configuration.GetConnectionString("AppDb") ?? throw new InvalidOperationException("Connection string 'AppDb' not found.")));
             builder.Services.AddIdentityEF<SQLServerIdentityDb>(options
@@ -23,13 +26,18 @@ namespace IoTPortal.Web
                 .AddEntityFrameworkStores<SQLServerIdentityDb>();
 
             builder.Services.AddRazorPages();
+            builder.Services.AddControllers();
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-                app.UseMigrationsEndPoint();
+                app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
             else
             {
@@ -40,11 +48,10 @@ namespace IoTPortal.Web
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
-
             app.UseAuthorization();
 
+            app.MapControllers();
             app.MapRazorPages();
 
             app.Run();

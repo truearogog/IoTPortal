@@ -1,13 +1,17 @@
-﻿<nav class="sidebar sidebar-sticky">
-    <ul class="nav nav-pills flex-column">
-        <li class="nav-item text-nowrap">
-            <a class="nav-link @DashboardNavPages.DashboardNavClass(ViewContext)" asp-page="/Dashboard/Index">Dashboard</a>
-        </li>
-        <li class="nav-item text-nowrap">
-            <a class="nav-link @DashboardNavPages.MyDevicesNavClass(ViewContext)" asp-page="/MyDevices/Index">My Devices</a>
-        </li>
-        <li class="nav-item text-nowrap">
-            <a class="nav-link @DashboardNavPages.CreateNewDeviceNavClass(ViewContext)" asp-page="/Device/CreateNewDevice">Create New Device</a>
-        </li>
-    </ul>
-</nav>
+﻿<ul class="nav nav-pills flex-column mb-auto">
+    <li class="nav-item">
+        <a class="nav-link @DashboardNavPages.DashboardNavClass(ViewContext)" asp-page="/Dashboard/Index">
+            <i class="fa-solid fa-chart-line pe-none me-2" width="16" height="16"></i>Dashboard
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @DashboardNavPages.MyDevicesNavClass(ViewContext)" asp-page="/MyDevices/Index">
+            <i class="fa-solid fa-microchip pe-none me-2"></i>My Devices
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @DashboardNavPages.CreateDeviceNavClass(ViewContext)" asp-page="/Device/Create">
+            <i class="fa-solid fa-plus pe-none me-2"></i>Create Device
+        </a>
+    </li>
+</ul>

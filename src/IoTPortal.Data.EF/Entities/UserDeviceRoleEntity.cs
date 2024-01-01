@@ -1,5 +1,4 @@
 ﻿using IoTPortal.Core.Enums;
-using IoTPortal.Core.Models;
 
 namespace IoTPortal.Data.EF.Entities
 {

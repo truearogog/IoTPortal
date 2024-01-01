@@ -1,0 +1,276 @@
+﻿@page
+@using IoTPortal.Core.Enums
+@using IoTPortal.Core.Services
+@using IoTPortal.Framework.Extensions
+@model IoTPortal.Web.Pages.Device.EditModel
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
+@inject IDeviceService DeviceService
+@{
+    ViewData["PrivateTitle"] = "Edit Device";
+
+    var canEditDeviceUsers = await DeviceService.CanEditDeviceUsers(Model.Device.Id, Model.UserId!);
+
+    var deviceRoles = new[]
+    {
+        (DeviceRole.User, true),
+        (DeviceRole.PowerUser, false),
+    };
+
+    var deviceStateDisplay = Model.Device.State.GetDisplay();
+}
+
+<div class="mb-3">
+    <h5>
+        Device state:
+        <span class="text-info fs-5">@deviceStateDisplay.Name</span>
+        <span class="text-muted fs-6">@deviceStateDisplay.Description</span>
+    </h5>
+</div>
+
+<partial name="_StatusMessage" model="@ViewData["StatusMessage"]" />
+
+<div>
+    <div class="card rounded-0 mb-3">
+        <h5 class="card-header">Properties</h5>
+        <div class="card-body">
+            <form method="post">
+                <input asp-for="DeviceInput.Id" hidden />
+                <div class="form-floating mb-3">
+                    <input asp-for="DeviceInput.Name" class="form-control" placeholder="Name" />
+                    <label asp-for="DeviceInput.Name" class="form-label"></label>
+                    <span asp-validation-for="DeviceInput.Name" class="text-danger"></span>
+                </div>
+                <div class="form-floating mb-3">
+                    <input asp-for="DeviceInput.Description" class="form-control" placeholder="Description" />
+                    <label asp-for="DeviceInput.Description" class="form-label"></label>
+                    <span asp-validation-for="DeviceInput.Description" class="text-danger"></span>
+                </div>
+                <button class="btn btn-primary" type="submit">Save</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card rounded-0 mb-3">
+        <h5 class="card-header">Measurement Types</h5>
+        <div class="card-body p-0">
+            <table class="table table-striped m-0">
+                <thead>
+                    <tr>
+                        <th scope="col" class="w-25">Variable</th>
+                        <th scope="col" class="w-25">Name</th>
+                        <th scope="col" class="w-25">Unit</th>
+                        <th scope="col" class="w-25">Color</th>
+                        @if (Model.Device.State == Core.Enums.DeviceState.Setup)
+                        {
+                            <th scope="col">
+                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createMeasurementTypeModal">
+                                    <i class="fa-solid fa-plus"></i>
+                                </button>
+                            </th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var measurementType in Model.Device.MeasurementTypes)
+                    {
+                        <tr>
+                            <td>@measurementType.Variable</td>
+                            <td>@measurementType.Name</td>
+                            <td>@measurementType.Unit</td>
+                            <td style="background-color:@measurementType.Color"></td>
+                            @if (Model.Device.State == Core.Enums.DeviceState.Setup)
+                            {
+                                <td>
+                                    <form method="post" asp-page-handler="DeleteMeasurementType">
+                                        <input name="deviceId" value="@Model.Device.Id" hidden />
+                                        <input name="measurementTypeId" value="@measurementType.Id" hidden />
+                                        <button type="submit" class="btn btn-danger">
+                                            <i class="fa-solid fa-minus"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card rounded-0 mb-3">
+        <h5 class="card-header">Device Users</h5>
+        <div class="card-body p-0">
+            <table class="table table-striped m-0">
+                <thead>
+                    <tr>
+                        <th scope="col" class="w-50">User</th>
+                        <th scope="col" class="w-50">Role</th>
+                        @if (canEditDeviceUsers)
+                        {
+                            <th scope="col">
+                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addUserDeviceRoleModal">
+                                    <i class="fa-solid fa-plus"></i>
+                                </button>
+                            </th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var userDeviceRole in Model.Device.UserDeviceRoles)
+                    {
+                        <tr>
+                            <td>@Model.UserDeviceRoleUsernames[userDeviceRole.UserId]</td>
+                            <td>@userDeviceRole.DeviceRole.GetDisplay().Name</td>
+                            @if (canEditDeviceUsers)
+                            {
+                                <td>
+                                    @if (userDeviceRole.UserId != Model.UserId)
+                                    {
+                                        <form method="post" asp-page-handler="DeleteUserDeviceRole">
+                                            <input name="deviceId" value="@userDeviceRole.DeviceId" hidden />
+                                            <input name="userId" value="@userDeviceRole.UserId" hidden />
+                                            <button type="submit" class="btn btn-danger">
+                                                <i class="fa-solid fa-minus"></i>
+                                            </button>
+                                        </form>   
+                                    }
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    @if (Model.Device.State == Core.Enums.DeviceState.Setup)
+    {
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#readyModal">
+            Move to Ready state
+        </button>
+    }
+</div>
+
+<div class="modal fade" id="readyModal" tabindex="-1" aria-labelledby="readyModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="readyModalLabel">
+                    Move to Ready state?
+                </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-warning">
+                    You will not be able to change measurement types.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                <form asp-page-handler="MoveToReady">
+                    <input name="deviceId" value="@Model.Device.Id" hidden />
+                    <button type="submit" class="btn btn-primary">Yes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="createMeasurementTypeModal" tabindex="-1" aria-labelledby="createMeasurementTypeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="createMeasurementTypeModalLabel">
+                    Add measurement type
+                </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-page-handler="CreateMeasurementType">
+                <div class="modal-body">
+                    <input asp-for="MeasurementTypeInput.DeviceId" hidden />
+                    <div class="mb-3">
+                        <label asp-for="MeasurementTypeInput.Variable" class="form-label"></label>
+                        <input asp-for="MeasurementTypeInput.Variable" class="form-control" placeholder="Variable" />
+                        <span asp-validation-for="MeasurementTypeInput.Variable" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="MeasurementTypeInput.Name" class="form-label"></label>
+                        <input asp-for="MeasurementTypeInput.Name" class="form-control" placeholder="Name" />
+                        <span asp-validation-for="MeasurementTypeInput.Name" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="MeasurementTypeInput.Unit" class="form-label"></label>
+                        <input asp-for="MeasurementTypeInput.Unit" class="form-control" placeholder="Unit" />
+                        <span asp-validation-for="MeasurementTypeInput.Unit" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="MeasurementTypeInput.Color" class="form-label"></label>
+                        <input asp-for="MeasurementTypeInput.Color" class="form-control form-control-color" type="color" value="#0000ff" />
+                        <span asp-validation-for="MeasurementTypeInput.Color" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addUserDeviceRoleModal" tabindex="-1" aria-labelledby="addUserDeviceRoleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="addUserDeviceRoleModalLabel">
+                    Add user role
+                </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-page-handler="CreateUserDeviceRole">
+                <div class="modal-body">
+                    <input asp-for="UserDeviceRoleInput.DeviceId" hidden />
+                    <div class="mb-3">
+                        <label for="userDatalist" class="form-label">Username</label>
+                        <input asp-for="UserDeviceRoleInput.Username" class="form-control" list="userDatalistOptions" id="userDatalist" placeholder="Type to search...">
+                        <datalist id="userDatalistOptions">
+                        </datalist>
+                    </div>
+                    <div>
+                        @{
+                            var i = 0;
+                            foreach (var (deviceRole, isChecked) in deviceRoles)
+                            {
+                                var deviceRoleDisplay = deviceRole.GetDisplay();
+                                var name = nameof(Model.UserDeviceRoleInput) + "." + nameof(Model.UserDeviceRoleInput.DeviceRole);
+                                var id = name + i++;
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="@name" id="@id" autocomplete="off" 
+                                        value="@deviceRole" @(isChecked ? "checked" : string.Empty)>
+                                    <label class="form-check-label" for="@id">
+                                        @deviceRoleDisplay.Name<br><span class="text-muted">@deviceRoleDisplay.Description</span>
+                                    </label>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript" src="~/js/pages/device-edit.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            DeviceEditJs.init();
+        });
+    </script>
+}

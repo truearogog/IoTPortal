@@ -1,6 +1,4 @@
-﻿
-
-#nullable disable
+﻿#nullable disable
 
 using IoTPortal.Identity.Models;
 using Microsoft.AspNetCore.Identity;

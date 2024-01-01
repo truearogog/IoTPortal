@@ -7,12 +7,11 @@ using IoTPortal.Core.Repositories;
 using IoTPortal.Data.EF.Entities;
 using IoTPortal.Data.EF.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Linq.Expressions;
 
 namespace IoTPortal.Data.EF.Repositories
 {
-    internal class UserDeviceRepository(IAppDb db, IMapper mapper) : RepositoryBase(db, mapper), IUserDeviceRepository
+    public class UserDeviceRoleRepository(IAppDb db, IMapper mapper) : RepositoryBase(db, mapper), IUserDeviceRoleRepository
     {
         public async Task Create(UserDeviceRole model)
         {
@@ -24,31 +23,36 @@ namespace IoTPortal.Data.EF.Repositories
 
         public async Task Delete(Guid deviceId, string userId)
         {
-            await Db.UserDeviceRoles.Where(x => x.DeviceId == deviceId && x.UserId == userId).ExecuteDeleteAsync().ConfigureAwait(false);
+            await Db.UserDeviceRoles
+                .Where(x => x.DeviceId == deviceId && x.UserId == userId)
+                .ExecuteDeleteAsync().ConfigureAwait(false);
             await Db.SaveChangesAsync().ConfigureAwait(false);
         }
 
-        public IQueryable<UserDeviceRole> GetAll(Expression<Func<UserDeviceRole, bool>> predicate)
+        public async Task<IEnumerable<UserDeviceRole>> GetAll(Expression<Func<UserDeviceRole, bool>> predicate)
         {
-            return Db.UserDeviceRoles
+            return await Db.UserDeviceRoles
                 .AsNoTracking()
                 .OrderBy(x => x.Created)
                 .ProjectTo<UserDeviceRole>(MapperConfig)
-                .Where(predicate);
+                .Where(predicate)
+                .ToListAsync().ConfigureAwait(false);
         }
 
-        public IQueryable<UserDeviceRole> GetForDevice(Guid deviceId)
+        public async Task<IEnumerable<UserDeviceRole>> GetForDevice(Guid deviceId)
         {
-            return GetAll(x => x.DeviceId == deviceId);
+            return await GetAll(x => x.DeviceId == deviceId);
         }
 
-        public IQueryable<UserDeviceRole> GetForUser(string userId)
+        public async Task<IEnumerable<Device>> GetDevicesForUser(string userId)
         {
-            return Db.UserDeviceRoles
+            return await Db.UserDeviceRoles
                 .AsNoTracking()
-                .Include(x => x.Device)
+                .Where(x => x.UserId == userId)
                 .OrderBy(x => x.Created)
-                .ProjectTo<UserDeviceRole>(MapperConfig);
+                .Select(x => x.Device)
+                .ProjectTo<Device>(MapperConfig)
+                .ToListAsync().ConfigureAwait(false);
         }
     }
 }

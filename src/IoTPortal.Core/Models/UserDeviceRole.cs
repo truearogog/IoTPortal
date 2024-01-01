@@ -6,7 +6,6 @@ namespace IoTPortal.Core.Models
     {
         public required string UserId { get; set; }
         public Guid DeviceId { get; set; }
-        public Device? Device { get; set; }
         public DeviceRole DeviceRole { get; set; }
 
         public DateTime Created { get; set; }

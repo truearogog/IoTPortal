@@ -1,18 +1,69 @@
 ﻿@page
+@using IoTPortal.Core.Services
+@using IoTPortal.Framework.Constants
 @model IoTPortal.Web.Pages.Device.IndexModel
+@inject IDeviceService DeviceService
 @{
+    ViewData["PrivateTitle"] = Model.Device.Name;
+    ViewData["PrivateSubtitle"] = Model.Device.Description;
+
+    var canUpdateDevice = await DeviceService.CanUpdateDevice(Model.Device.Id, Model.UserId!);
 }
 
-<div class="container text-center">
-    <div class="row">
-        <div class="col">
-            Column
-        </div>
-        <div class="col">
-            Column
-        </div>
-        <div class="col">
-            Column
+<div class="d-flex column-gap-2">
+    @if (canUpdateDevice)
+    {
+        <a class="btn btn-primary" asp-page="/Device/Edit" asp-route-id="@(Model.Device.Id)">Edit Device</a>
+    }
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#informationModal">
+        Information
+    </button>
+</div>
+
+<div>
+    <canvas id="deviceChart"></canvas>
+</div>
+
+<div class="modal fade" id="informationModal" tabindex="-1" aria-labelledby="informationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="informationModalLabel">
+                    Device information
+                </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>To send measurements to this device, send POST request to: <small class="text-body-secondary">@Html.Encode(@"https://localhost:7149/api/measurement/add")</small></p>
+                <p>Add following headers to your request:</p>
+                <div class="bg-body-secondary border mb-3 p-2">
+                    <code>
+                        @HttpConstants.ApiKeyHeaderName: @Model.Device.ApiKey<br>
+                        @HttpConstants.DeviceIdHeaderName: @Model.Device.Id
+                    </code>
+                </div>
+                <p>Add measurements to your request body:</p>
+                <div class="bg-body-secondary border mb-3 p-2">
+                    <code>
+                        @foreach (var measurementType in Model.Device.MeasurementTypes)
+                        {
+                            @($"\"{measurementType.Variable}\": {Random.Shared.NextDouble() * 100:0.000}")<br>
+                        }
+                    </code>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/luxon"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon"></script>
+    <script type="text/javascript" src="~/js/pages/device.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            DeviceJs.init('@Model.Device.Id');
+        });
+    </script>
+}

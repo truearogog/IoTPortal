@@ -1,7 +1,6 @@
 ﻿@page
 @model IoTPortal.Web.Pages.MyDevices.IndexModel
 @{
-    ViewData["ActivePage"] = DashboardNavPages.MyDevices;
     ViewData["PrivateTitle"] = "My Devices";
     ViewData["PrivateSubtitle"] = "Overview and manage your devices";
 }
@@ -10,7 +9,7 @@
 
 @section Scripts {
     <script type="text/javascript" src="~/js/pages/my-devices.js"></script>
-    <script>
+    <script type="text/javascript">
         $(function () {
             MyDevicesJs.init({
                 myDevicesUrl: '@Html.Raw(Url.Page("/MyDevices/Index", "DeviceGrid"))'

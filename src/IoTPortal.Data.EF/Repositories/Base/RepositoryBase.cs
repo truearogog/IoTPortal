@@ -2,7 +2,7 @@
 
 namespace IoTPortal.Data.EF.Repositories.Base
 {
-    internal class RepositoryBase(IAppDb db, IMapper mapper)
+    public class RepositoryBase(IAppDb db, IMapper mapper)
     {
         protected readonly IAppDb Db = db;
         protected IMapper Mapper = mapper;

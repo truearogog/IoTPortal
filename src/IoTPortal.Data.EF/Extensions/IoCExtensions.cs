@@ -2,7 +2,6 @@
 using IoTPortal.Core.Repositories;
 using IoTPortal.Data.EF.Profiles;
 using IoTPortal.Data.EF.Repositories;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -41,7 +40,9 @@ namespace IoTPortal.Data.EF.Extensions
         {
             // Register repositories
             services.Add(new ServiceDescriptor(typeof(IDeviceRepository), typeof(DeviceRepository), scope));
-            services.Add(new ServiceDescriptor(typeof(IUserDeviceRepository), typeof(UserDeviceRepository), scope));
+            services.Add(new ServiceDescriptor(typeof(IUserDeviceRoleRepository), typeof(UserDeviceRoleRepository), scope));
+            services.Add(new ServiceDescriptor(typeof(IMeasurementTypeRepository), typeof(MeasurementTypeRepository), scope));
+            services.Add(new ServiceDescriptor(typeof(IMeasurementGroupRepository), typeof(MeasurementGroupRepository), scope));
 
             // Register services
             services.Add(new ServiceDescriptor(typeof(IAppDb), typeof(T), scope));
@@ -51,6 +52,8 @@ namespace IoTPortal.Data.EF.Extensions
             {
                 cfg.AddProfile(typeof(DeviceProfile));
                 cfg.AddProfile(typeof(UserDeviceRoleProfile));
+                cfg.AddProfile(typeof(MeasurementTypeProfile));
+                cfg.AddProfile(typeof(MeasurementGroupProfile));
             });
             services.Add(new ServiceDescriptor(typeof(IMapper), new Mapper(config)));
 

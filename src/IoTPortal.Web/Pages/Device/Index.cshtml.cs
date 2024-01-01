@@ -1,27 +1,29 @@
 #nullable disable
 
-using IoTPortal.Core.Repositories;
+using IoTPortal.Core.Models;
+using IoTPortal.Core.Services;
 using IoTPortal.Identity.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IoTPortal.Web.Pages.Device
 {
-    public class IndexModel(IDeviceRepository deviceRepository, UserManager<User> userManager) : AuthPageModelBase(userManager)
+    public class IndexModel(IDeviceService deviceService, UserManager<User> userManager) : AuthPageModelBase(userManager)
     {
-        private readonly IDeviceRepository _deviceRepository = deviceRepository;
+        private readonly IDeviceService _deviceService = deviceService;
 
         [BindProperty]
         public Core.Models.Device Device { get; set; }
 
         public async Task<IActionResult> OnGetAsync(Guid id)
         {
-            var device = await _deviceRepository.GetByIdAsync(id);
-            if (device != default || device.UserDeviceRoles.Any(x => x.UserId == UserId))
+            if (await _deviceService.CanSeeDevice(id, UserId))
             {
+                Device = await _deviceService.GetById(id);
                 return Page();
             }
-            return Unauthorized();
+            return AccessDenied();
         }
     }
 }

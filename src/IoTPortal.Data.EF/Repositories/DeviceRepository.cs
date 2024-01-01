@@ -11,51 +11,40 @@ using System.Linq.Expressions;
 
 namespace IoTPortal.Data.EF.Repositories
 {
-    internal class DeviceRepository(IAppDb db, IMapper mapper) : RepositoryBase(db, mapper), IDeviceRepository
+    public class DeviceRepository(IAppDb db, IMapper mapper) : RepositoryBase(db, mapper), IDeviceRepository
     {
-        public IQueryable<Device> GetAll()
+        public async Task<IEnumerable<Device>> GetAll()
         {
-            return Db.Devices
+            return await Db.Devices
                 .AsNoTracking()
-                .OrderBy(x => x.Id)
-                .ThenBy(x => x.Name)
-                .ProjectTo<Device>(MapperConfig);
-        }
-
-        public IQueryable<Device> GetAll(Expression<Func<Device, bool>> predicate)
-        {
-            return Db.Devices
-                .AsNoTracking()
-                .OrderBy(x => x.Id)
-                .ThenBy(x => x.Name)
+                .OrderBy(x => x.Created)
                 .ProjectTo<Device>(MapperConfig)
-                .Where(predicate);
+                .ToListAsync().ConfigureAwait(false);
         }
 
-        public Device GetById(Guid id)
+        public async Task<IEnumerable<Device>> GetAll(Expression<Func<Device, bool>> predicate)
         {
-            return Db.Devices
+            return await Db.Devices
                 .AsNoTracking()
-                .Where(x => x.Id == id)
+                .OrderBy(x => x.Created)
                 .ProjectTo<Device>(MapperConfig)
-                .FirstOrDefault();
+                .Where(predicate)
+                .ToListAsync().ConfigureAwait(false);
         }
 
-        public async Task<Device> GetByIdAsync(Guid id)
+        public async Task<Device> GetById(Guid id)
         {
             return await Db.Devices
                 .AsNoTracking()
                 .Include(x => x.UserDeviceRoles)
+                .Include(x => x.MeasurementTypes)
                 .Where(x => x.Id == id)
                 .ProjectTo<Device>(MapperConfig)
-                .FirstOrDefaultAsync()
-                .ConfigureAwait(false);
+                .FirstOrDefaultAsync().ConfigureAwait(false);
         }
 
         public async Task Create(Device model)
         {
-            model.Created = DateTime.UtcNow;
-            model.Updated = DateTime.UtcNow;
             var entity = Mapper.Map<DeviceEntity>(model);
             await Db.Devices.AddAsync(entity).ConfigureAwait(false);
             await Db.SaveChangesAsync().ConfigureAwait(false);
@@ -63,11 +52,6 @@ namespace IoTPortal.Data.EF.Repositories
 
         public async Task CreateRange(IEnumerable<Device> models)
         {
-            foreach (var model in models)
-            {
-                model.Created = DateTime.UtcNow;
-                model.Updated = DateTime.UtcNow;
-            }
             var entities = Mapper.Map<IEnumerable<DeviceEntity>>(models);
             await Db.InsertRangeAsync(entities).ConfigureAwait(false);
             await Db.SaveChangesAsync().ConfigureAwait(false);
