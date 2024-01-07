@@ -251,7 +251,5 @@ namespace IoTPortal.Data.EF.Tests.Repositories
                     Updated = DateTime.UtcNow,
                 });
         }
-
-        
     }
 }

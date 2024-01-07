@@ -14,7 +14,7 @@
     <h5>@Model.Device.Description</h5>
 </div>
 
-<div class="d-flex column-gap-2">
+<div class="d-flex column-gap-2 mb-3">
     @if (canUpdateDevice)
     {
         <a class="btn btn-primary" asp-page="/Device/Edit" asp-route-id="@(Model.Device.Id)">Edit Device</a>
@@ -24,28 +24,40 @@
     }
 </div>
 
-<div class="mb-3">
-    <canvas id="deviceChart"></canvas>
-</div>
+<ul class="nav nav-navpills mb-3" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#table" type="button" role="tab">Table</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" data-bs-toggle="pill" data-bs-target="#chart" type="button" role="tab">Chart</button>
+    </li>
+</ul>
 
-@(
-Html
-    .Grid(Model.MeasurementGroups)
-    .Build(columns =>
-    {
-        columns.Add(model => model.Created).Titled("Date/time");
-        _ = Model.MeasurementTypes.Select((measurementType, i) =>
-        {
-            columns.Add(model => model.Measurements[i]).Formatted("{0:0.###}").Titled(measurementType.Name + ", " + measurementType.Unit);
-            return (object?)null;
-        }).ToList();
-    })
-    .Using(GridFilterMode.Header)
-    .Empty("No data found")
-    .Sortable()
-    .Pageable()
-    .Css("table table-striped m-0")
-)
+<div class="tab-content">
+    <div id="table" class="tab-pane fade show active" role="tabpanel">
+        @(
+            Html
+            .Grid(Model.MeasurementGroups)
+            .Build(columns =>
+            {
+                columns.Add(model => model.Created).Titled("Date/time");
+                _ = Model.MeasurementTypes.Select((measurementType, i) =>
+                {
+                    columns.Add(model => model.Measurements[i]).Formatted("{0:0.###}").Titled(measurementType.Name + ", " + measurementType.Unit);
+                    return (object?)null;
+                }).ToList();
+            })
+            .Using(GridFilterMode.Header)
+            .Empty("No data found")
+            .Sortable()
+            .Pageable()
+            .Css("table table-striped m-0")
+            )
+    </div>
+    <div id="chart" class="tab-pane fade" role="tabpanel">
+        <canvas id="deviceChart"></canvas>
+    </div>
+</div>
 
 <div class="modal fade" id="informationModal" tabindex="-1" aria-labelledby="informationModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -57,7 +69,7 @@ Html
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>To send measurements to this device, send POST request to: <small class="text-body-secondary">@Html.Encode(@"https://localhost:7149/api/measurement/add")</small></p>
+                <p>To send measurements to this device, send HTTPS POST request to: <small class="text-body-secondary">@Html.Encode(@"https://localhost:7149/api/measurement/add")</small></p>
                 <p>Add following headers to your request:</p>
                 <div class="bg-body-secondary border mb-3 p-2">
                     <code>
@@ -65,7 +77,7 @@ Html
                         @HttpConstants.DeviceIdHeaderName: @Model.Device.Id
                     </code>
                 </div>
-                <p>Add measurements to your request body:</p>
+                <p>Add measurements to your request body. Example:</p>
                 <div class="bg-body-secondary border mb-3 p-2">
                     <code>
                         @foreach (var measurementType in Model.Device.MeasurementTypes)
