@@ -20,24 +20,10 @@ namespace IoTPortal.Web.Pages.Device
 
         public class InputModel
         {
-            [Required, Display(Name = "Name")]
+            [Required, Display(Name = "Name"), MaxLength(30)]
             public string Name { get; set; }
-            [Display(Name = "Description")]
+            [Display(Name = "Description"), MaxLength(100)]
             public string Description { get; set; }
-
-            public class MeasurementTypeInputModel
-            {
-                [Required]
-                public string Variable { get; set; }
-                [Required]
-                public string Name { get; set; }
-                [Required]
-                public string Unit { get; set; }
-                [Required]
-                public string Color { get; set; }
-            }
-
-            public List<MeasurementTypeInputModel> MeasurementTypes { get; set; }
         }
 
         public void OnGet()
@@ -56,6 +42,7 @@ namespace IoTPortal.Web.Pages.Device
                         Id = id,
                         Name = Input.Name,
                         Description = Input.Description,
+                        ApiKey = Guid.NewGuid().ToString().Replace("-", string.Empty),
                     };
                     await _deviceService.CreateDevice(device, UserId);
                     return Redirect(Url.Page("./Edit", new { id = id }));

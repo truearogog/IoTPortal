@@ -2,11 +2,11 @@
 
 namespace IoTPortal.Core.Services
 {
-    public interface IMeasurementService
+    public interface IMeasurementTypeService
     {
-        Task CreateMeasurementGroup(MeasurementGroup group);
+        Task CreateMeasurementType(MeasurementType measurementType);
+        Task DeleteMeasurementType(Guid deviceId, Guid id);
 
-        Task<IEnumerable<MeasurementGroup>> GetMeasurementGroups(Guid deviceId);
         Task<IEnumerable<MeasurementType>> GetMeasurementTypes(Guid deviceId);
         Task<IReadOnlyDictionary<string, int>> GetMeasurementTypePositions(Guid deviceId);
     }

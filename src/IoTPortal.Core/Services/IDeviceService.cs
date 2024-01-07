@@ -15,9 +15,6 @@ namespace IoTPortal.Core.Services
         Task CreateDevice(Device device, string userId);
         Task UpdateDevice(Device device);
 
-        Task CreateMeasurementType(MeasurementType measurementType);
-        Task DeleteMeasurementType(Guid deviceId, Guid id);
-
         Task CreateUserDeviceRole(UserDeviceRole userDeviceRole);
         Task DeleteUserDeviceRole(Guid deviceId, string userId);
     }

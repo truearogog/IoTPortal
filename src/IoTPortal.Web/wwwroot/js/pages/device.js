@@ -17,7 +17,7 @@
 
                 for (let i = 0; i < types.length; i++) {
                     const dataset = {
-                        label: types[i].name,
+                        label: types[i].name + ', ' + types[i].unit,
                         borderColor: types[i].color,
                         data: groups.map(function (group) {
                             return {

@@ -1,5 +1,6 @@
 #nullable disable
 
+using IoTPortal.Core.Configurations;
 using IoTPortal.Core.Enums;
 using IoTPortal.Core.Models;
 using IoTPortal.Core.Services;
@@ -13,14 +14,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace IoTPortal.Web.Pages.Device
 {
-    public class EditModel(IDeviceService deviceService, UserManager<User> userManager) : AuthPageModelBase(userManager)
+    public class EditModel(UserManager<User> userManager, IDeviceService deviceService, IMeasurementTypeService measurementTypeService, DeviceConfiguration deviceConfiguration) : AuthPageModelBase(userManager)
     {
         private readonly IDeviceService _deviceService = deviceService;
+        private readonly IMeasurementTypeService _measurementTypeService = measurementTypeService;
+        public readonly DeviceConfiguration DeviceConfiguration = deviceConfiguration;
 
-        [BindProperty]
         public Core.Models.Device Device { get; set; }
-
-        [BindProperty]
         public Dictionary<string, string> UserDeviceRoleUsernames { get; set; } = [];
 
         [BindProperty]
@@ -30,9 +30,9 @@ namespace IoTPortal.Web.Pages.Device
         {
             [Required]
             public Guid Id { get; set; }
-            [Required, Display(Name = "Name")]
+            [Required, Display(Name = "Name"), MaxLength(30)]
             public string Name { get; set; }
-            [Display(Name = "Description")]
+            [Display(Name = "Description"), MaxLength(100)]
             public string Description { get; set; }
         }
 
@@ -43,13 +43,13 @@ namespace IoTPortal.Web.Pages.Device
         {
             [Required]
             public Guid DeviceId { get; set; }
-            [Required, Display(Name = "Variable")]
+            [Required, Display(Name = "Variable"), MaxLength(10)]
             public string Variable { get; set; }
-            [Required, Display(Name = "Name")]
+            [Required, Display(Name = "Name"), MaxLength(20)]
             public string Name { get; set; }
-            [Required, Display(Name = "Unit")]
+            [Required, Display(Name = "Unit"), MaxLength(20)]
             public string Unit { get; set; }
-            [Required, Display(Name = "Color")]
+            [Required, Display(Name = "Color"), MaxLength(10)]
             public string Color { get; set; }
         }
 
@@ -114,7 +114,7 @@ namespace IoTPortal.Web.Pages.Device
             {
                 if (await _deviceService.CanUpdateDevice(deviceId, UserId))
                 {
-                    await _deviceService.DeleteMeasurementType(deviceId, measurementTypeId);
+                    await _measurementTypeService.DeleteMeasurementType(deviceId, measurementTypeId);
                 }
                 else
                 {
@@ -149,7 +149,7 @@ namespace IoTPortal.Web.Pages.Device
                     Unit = MeasurementTypeInput.Unit,
                     Color = MeasurementTypeInput.Color,
                 };
-                await _deviceService.CreateMeasurementType(measurementType);
+                await _measurementTypeService.CreateMeasurementType(measurementType);
             }
 
             return RedirectToPage(new { id = MeasurementTypeInput.DeviceId });
@@ -187,7 +187,9 @@ namespace IoTPortal.Web.Pages.Device
 
                 if (user == null)
                 {
-
+                    ViewData["StatusMessage"] = new StatusMessageModel { Status = false, Message = "User does not exist." };
+                    await PrepareViewData(UserDeviceRoleInput.DeviceId);
+                    return Page();
                 }
 
                 if (!await _deviceService.DeviceHasUser(UserDeviceRoleInput.DeviceId, user.Id))
@@ -200,6 +202,12 @@ namespace IoTPortal.Web.Pages.Device
                     };
                     await _deviceService.CreateUserDeviceRole(userDeviceRole);
                 }
+            }
+            else
+            {
+                ViewData["StatusMessage"] = new StatusMessageModel { Status = false, Message = "You have no rights to edit this device." };
+                await PrepareViewData(UserDeviceRoleInput.DeviceId);
+                return Page();
             }
 
             return RedirectToPage(new { id = UserDeviceRoleInput.DeviceId });

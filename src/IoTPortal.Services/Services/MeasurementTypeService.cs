@@ -10,16 +10,22 @@ using System.Collections.ObjectModel;
 
 namespace IoTPortal.Services.Services
 {
-    internal class MeasurementService(IMemoryCache memoryCache, IMeasurementTypeRepository measurementTypeRepository, 
-        IMeasurementGroupRepository measurementGroupRepository) : IMeasurementService
+    internal class MeasurementTypeService(IMemoryCache memoryCache, IMeasurementTypeRepository measurementTypeRepository) : IMeasurementTypeService
     {
         private readonly IMemoryCache _memoryCache = memoryCache;
         private readonly IMeasurementTypeRepository _measurementTypeRepository = measurementTypeRepository;
-        private readonly IMeasurementGroupRepository _measurementGroupRepository = measurementGroupRepository;
 
-        public async Task CreateMeasurementGroup(MeasurementGroup group)
+        public async Task CreateMeasurementType(MeasurementType measurementType)
         {
-            await _measurementGroupRepository.Create(group);
+            await _measurementTypeRepository.Create(measurementType);
+            _memoryCache.Remove(measurementType.DeviceId);
+            _memoryCache.Remove(CacheNames.DeviceMeasurementTypes + measurementType.DeviceId);
+        }
+        public async Task DeleteMeasurementType(Guid deviceId, Guid id)
+        {
+            await _measurementTypeRepository.Delete(id);
+            _memoryCache.Remove(deviceId);
+            _memoryCache.Remove(CacheNames.DeviceMeasurementTypes + deviceId);
         }
 
         public async Task<IEnumerable<MeasurementType>> GetMeasurementTypes(Guid deviceId)
@@ -33,20 +39,6 @@ namespace IoTPortal.Services.Services
             {
                 entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1);
                 return _measurementTypeRepository.GetAll(x => x.DeviceId == deviceId);
-            });
-        }
-
-        public async Task<IEnumerable<MeasurementGroup>> GetMeasurementGroups(Guid deviceId)
-        {
-            if (deviceId == Guid.Empty)
-            {
-                return Enumerable.Empty<MeasurementGroup>();
-            }
-
-            return await _memoryCache.GetOrCreateAsync(CacheNames.DeviceMeasurementGroups + deviceId, entry =>
-            {
-                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1);
-                return _measurementGroupRepository.GetForDevice(deviceId);
             });
         }
 
@@ -67,6 +59,5 @@ namespace IoTPortal.Services.Services
                 return variablePositions;
             });
         }
-
     }
 }

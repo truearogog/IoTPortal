@@ -2,11 +2,11 @@
   "dependencies": {
     "mssql1": {
       "type": "mssql",
-      "connectionId": "ConnectionStrings:DefaultConnection"
+      "connectionId": "ConnectionStrings:AppDb"
     },
     "mssql2": {
       "type": "mssql",
-      "connectionId": "ConnectionStrings:IoTPortalWebContextConnection"
+      "connectionId": "ConnectionStrings:IdentityDb"
     }
   }
 }

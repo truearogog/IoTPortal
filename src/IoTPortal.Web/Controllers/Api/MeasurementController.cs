@@ -1,25 +1,25 @@
 ﻿using IoTPortal.Core.Models;
 using IoTPortal.Core.Services;
 using IoTPortal.Identity.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IoTPortal.Web.Controllers.Api
 {
-    public class MeasurementController(IDeviceService deviceService, IMeasurementService measurementService, UserManager<User> userManager) : AuthControllerBase(userManager)
+    public class MeasurementController(IDeviceService deviceService, IMeasurementTypeService measurementTypeService, IMeasurementGroupService measurementGroupService, UserManager<User> userManager) : AuthControllerBase(userManager)
     {
         private readonly IDeviceService _deviceService = deviceService;
-        private readonly IMeasurementService _measurementService = measurementService;
+        private readonly IMeasurementTypeService _measurementTypeService = measurementTypeService;
+        private readonly IMeasurementGroupService _measurementGroupService = measurementGroupService;
 
         [HttpGet("types")]
-        public async Task<Results<Ok<List<MeasurementType>>, BadRequest<string>, UnauthorizedHttpResult>> GetMeasurementTypes(Guid deviceId)
+        public async Task<IActionResult> GetMeasurementTypes(Guid deviceId)
         {
             return await Execute(async context =>
             {
                 if (await _deviceService.CanSeeDevice(deviceId, UserId!))
                 {
-                    var measurementTypes = await _measurementService.GetMeasurementTypes(deviceId);
+                    var measurementTypes = await _measurementTypeService.GetMeasurementTypes(deviceId);
                     return measurementTypes.ToList();
                 }
 
@@ -29,13 +29,13 @@ namespace IoTPortal.Web.Controllers.Api
         }
 
         [HttpGet("groups")]
-        public async Task<Results<Ok<List<MeasurementGroup>>, BadRequest<string>, UnauthorizedHttpResult>> GetMeasurementGroups(Guid deviceId)
+        public async Task<IActionResult> GetMeasurementGroups(Guid deviceId)
         {
             return await Execute(async context =>
             {
                 if (await _deviceService.CanSeeDevice(deviceId, UserId!))
                 {
-                    var measurementGroups = await _measurementService.GetMeasurementGroups(deviceId);
+                    var measurementGroups = await _measurementGroupService.GetMeasurementGroups(deviceId);
                     return measurementGroups.ToList();
                 }
 

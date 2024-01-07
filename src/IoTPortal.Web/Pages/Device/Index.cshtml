@@ -1,28 +1,51 @@
 ﻿@page
 @using IoTPortal.Core.Services
 @using IoTPortal.Framework.Constants
+@using IoTPortal.Framework.Extensions
 @model IoTPortal.Web.Pages.Device.IndexModel
 @inject IDeviceService DeviceService
 @{
-    ViewData["PrivateTitle"] = Model.Device.Name;
-    ViewData["PrivateSubtitle"] = Model.Device.Description;
-
     var canUpdateDevice = await DeviceService.CanUpdateDevice(Model.Device.Id, Model.UserId!);
+    var deviceStateDisplay = Model.Device.State.GetDisplay();
 }
+
+<div class="mb-3">
+    <h3>@Model.Device.Name <small class="text-info">@deviceStateDisplay.Name</small></h3>
+    <h5>@Model.Device.Description</h5>
+</div>
 
 <div class="d-flex column-gap-2">
     @if (canUpdateDevice)
     {
         <a class="btn btn-primary" asp-page="/Device/Edit" asp-route-id="@(Model.Device.Id)">Edit Device</a>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#informationModal">
+            Information
+        </button>
     }
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#informationModal">
-        Information
-    </button>
 </div>
 
-<div>
+<div class="mb-3">
     <canvas id="deviceChart"></canvas>
 </div>
+
+@(
+Html
+    .Grid(Model.MeasurementGroups)
+    .Build(columns =>
+    {
+        columns.Add(model => model.Created).Titled("Date/time");
+        _ = Model.MeasurementTypes.Select((measurementType, i) =>
+        {
+            columns.Add(model => model.Measurements[i]).Formatted("{0:0.###}").Titled(measurementType.Name + ", " + measurementType.Unit);
+            return (object?)null;
+        }).ToList();
+    })
+    .Using(GridFilterMode.Header)
+    .Empty("No data found")
+    .Sortable()
+    .Pageable()
+    .Css("table table-striped m-0")
+)
 
 <div class="modal fade" id="informationModal" tabindex="-1" aria-labelledby="informationModalLabel" aria-hidden="true">
     <div class="modal-dialog">

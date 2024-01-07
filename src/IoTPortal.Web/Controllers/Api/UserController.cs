@@ -1,5 +1,4 @@
 ﻿using IoTPortal.Identity.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +8,7 @@ namespace IoTPortal.Web.Controllers.Api
     public class UserController(UserManager<User> userManager) : AuthControllerBase(userManager)
     {
         [HttpGet("find/username")]
-        public async Task<Results<Ok<List<string>>, BadRequest<string>, UnauthorizedHttpResult>> GetFindUsername(string search)
+        public async Task<IActionResult> GetFindUsername(string search)
         {
             return await Execute(async context =>
             {

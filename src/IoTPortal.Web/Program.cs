@@ -1,5 +1,7 @@
+using IoTPortal.Core.Configurations;
 using IoTPortal.Data.EF.Extensions;
 using IoTPortal.Data.EF.SQLServer;
+using IoTPortal.Framework.Converters;
 using IoTPortal.Identity.Extensions;
 using IoTPortal.Identity.Models;
 using IoTPortal.Identity.SQLServer;
@@ -14,11 +16,14 @@ namespace IoTPortal.Web
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddSingleton(builder.Configuration.GetSection("Device").Get<DeviceConfiguration>() 
+                ?? throw new InvalidOperationException("Device configuration not found."));
+
             builder.Services.AddServices();
-            builder.Services.AddAppEF<SQLServerAppDb>(options
-                => options.UseSqlServer(builder.Configuration.GetConnectionString("AppDb") ?? throw new InvalidOperationException("Connection string 'AppDb' not found.")));
-            builder.Services.AddIdentityEF<SQLServerIdentityDb>(options
-                => options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityDb") ?? throw new InvalidOperationException("Connection string 'IdentityDb' not found.")));
+            builder.Services.AddAppEF<SQLServerAppDb>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("AppDb") 
+                ?? throw new InvalidOperationException("Connection string 'AppDb' not found.")));
+            builder.Services.AddIdentityEF<SQLServerIdentityDb>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityDb") 
+                ?? throw new InvalidOperationException("Connection string 'IdentityDb' not found.")));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             builder.Services
@@ -26,7 +31,12 @@ namespace IoTPortal.Web
                 .AddEntityFrameworkStores<SQLServerIdentityDb>();
 
             builder.Services.AddRazorPages();
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.NumberHandling = System.Text.Json.Serialization.JsonNumberHandling.AllowNamedFloatingPointLiterals;
+                    options.JsonSerializerOptions.Converters.Add(new DoubleInfinityConverter());
+                });
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 

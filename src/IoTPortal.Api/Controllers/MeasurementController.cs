@@ -9,10 +9,11 @@ namespace IoTPortal.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MeasurementController(IDeviceService deviceService, IMeasurementService measurementService) : ControllerBase
+    public class MeasurementController(IDeviceService deviceService, IMeasurementTypeService measurementTypeService, IMeasurementGroupService measurementGroupService) : ControllerBase
     {
-        private readonly IMeasurementService _measurementService = measurementService;
         private readonly IDeviceService _deviceService = deviceService;
+        private readonly IMeasurementTypeService _measurementService = measurementTypeService;
+        private readonly IMeasurementGroupService _measurementGroupService = measurementGroupService;
 
         [HttpPost("add")]
         [ApiKey]
@@ -41,7 +42,7 @@ namespace IoTPortal.Api.Controllers
                         Created = DateTime.UtcNow,
                         Measurements = array
                     };
-                    await _measurementService.CreateMeasurementGroup(measurementGroup);
+                    await _measurementGroupService.CreateMeasurementGroup(measurementGroup);
 
                     return Ok();
                 }

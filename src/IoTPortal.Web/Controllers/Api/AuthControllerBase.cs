@@ -1,5 +1,4 @@
 ﻿using IoTPortal.Identity.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,11 +16,11 @@ namespace IoTPortal.Web.Controllers.Api
             public bool Authorized { get; set; }
         }
 
-        protected async Task<Results<Ok<T>, BadRequest<string>, UnauthorizedHttpResult>> Execute<T>(Func<ExecuteContext, Task<T>> action)
+        protected async Task<IActionResult> Execute<T>(Func<ExecuteContext, Task<T>> action)
         {
             if (!User.Identity!.IsAuthenticated)
             {
-                return TypedResults.Unauthorized();
+                return Unauthorized();
             }
 
             try
@@ -34,13 +33,13 @@ namespace IoTPortal.Web.Controllers.Api
 
                 if (!executeContext.Authorized)
                 {
-                    return TypedResults.Unauthorized();
+                    return Unauthorized();
                 }
-                return TypedResults.Ok(result);
+                return Ok(result);
             }
             catch (Exception ex)
             {
-                return TypedResults.BadRequest(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
     }

@@ -19,12 +19,11 @@
     var deviceStateDisplay = Model.Device.State.GetDisplay();
 }
 
-<div class="mb-3">
+<div class="mb-3 d-flex justify-content-between">
     <h5>
-        Device state:
-        <span class="text-info fs-5">@deviceStateDisplay.Name</span>
-        <span class="text-muted fs-6">@deviceStateDisplay.Description</span>
+        <span class="text-info">@deviceStateDisplay.Name</span> <span class="text-muted">@deviceStateDisplay.Description</span>
     </h5>
+    <a type="button" class="btn-close" asp-page="/Device/Index" asp-route-id="@Model.Device.Id" aria-label="Back"></a>
 </div>
 
 <partial name="_StatusMessage" model="@ViewData["StatusMessage"]" />
@@ -51,7 +50,7 @@
     </div>
 
     <div class="card rounded-0 mb-3">
-        <h5 class="card-header">Measurement Types</h5>
+        <h5 class="card-header">Measurement Types <small>(@Model.Device.MeasurementTypes.Count/@Model.DeviceConfiguration.MaxMeasurementTypes)</small></h5>
         <div class="card-body p-0">
             <table class="table table-striped m-0">
                 <thead>
@@ -60,7 +59,7 @@
                         <th scope="col" class="w-25">Name</th>
                         <th scope="col" class="w-25">Unit</th>
                         <th scope="col" class="w-25">Color</th>
-                        @if (Model.Device.State == Core.Enums.DeviceState.Setup)
+                        @if (Model.Device.State == Core.Enums.DeviceState.Setup && Model.Device.MeasurementTypes.Count < Model.DeviceConfiguration.MaxMeasurementTypes)
                         {
                             <th scope="col">
                                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createMeasurementTypeModal">
@@ -233,6 +232,7 @@
                     <div class="mb-3">
                         <label for="userDatalist" class="form-label">Username</label>
                         <input asp-for="UserDeviceRoleInput.Username" class="form-control" list="userDatalistOptions" id="userDatalist" placeholder="Type to search...">
+                        <span asp-validation-for="UserDeviceRoleInput.Username" class="text-danger"></span>
                         <datalist id="userDatalistOptions">
                         </datalist>
                     </div>
