@@ -23,7 +23,7 @@
     <h5>
         <span class="text-info">@deviceStateDisplay.Name</span> <span class="text-muted">@deviceStateDisplay.Description</span>
     </h5>
-    <a type="button" class="btn-close" asp-page="/Device/Index" asp-route-id="@Model.Device.Id" aria-label="Back"></a>
+    <a type="button" class="btn btn-outline" asp-page="/Device/Index" asp-route-id="@Model.Device.Id" aria-label="Back">Back</a>
 </div>
 
 <partial name="_StatusMessage" model="@ViewData["StatusMessage"]" />

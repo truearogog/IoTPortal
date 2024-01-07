@@ -38,7 +38,7 @@ namespace IoTPortal.Web.Pages.Device
                 {
                     var id = Guid.NewGuid();
                     var device = new Core.Models.Device()
-                    { 
+                    {
                         Id = id,
                         Name = Input.Name,
                         Description = Input.Description,
