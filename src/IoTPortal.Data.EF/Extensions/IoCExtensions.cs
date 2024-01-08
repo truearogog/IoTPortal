@@ -28,8 +28,7 @@ namespace IoTPortal.Data.EF.Extensions
         }
 
         /// <summary>
-        /// Adds the default services needed to run an application over
-        /// Entity Framework Core.
+        /// Adds the default services needed to run an application over Entity Framework Core.
         /// </summary>
         /// <param name="services">The current service collection</param>
         /// <param name="scope">The optional lifetime</param>

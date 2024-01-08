@@ -20,6 +20,7 @@ namespace IoTPortal.Web.Pages.Device
         private readonly IMeasurementTypeService _measurementTypeService = measurementTypeService;
         public readonly DeviceConfiguration DeviceConfiguration = deviceConfiguration;
 
+        [BindProperty]
         public Core.Models.Device Device { get; set; }
         public Dictionary<string, string> UserDeviceRoleUsernames { get; set; } = [];
 
@@ -140,6 +141,14 @@ namespace IoTPortal.Web.Pages.Device
 
             if (await _deviceService.CanUpdateDevice(MeasurementTypeInput.DeviceId, UserId))
             {
+                var device = await _deviceService.GetById(MeasurementTypeInput.DeviceId);
+                if (device.MeasurementTypes.Any(x => x.Variable == MeasurementTypeInput.Variable))
+                {
+                    ViewData["StatusMessage"] = new StatusMessageModel { Status = false, Message = "Measurement type must be unique!" };
+                    await PrepareViewData(MeasurementTypeInput.DeviceId);
+                    return Page();
+                }
+
                 var measurementType = new MeasurementType
                 {
                     Id = Guid.NewGuid(),

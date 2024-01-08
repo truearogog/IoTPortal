@@ -54,7 +54,7 @@ namespace IoTPortal.Data.EF.SQLServer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Devices");
+                    b.ToTable("Devices", (string)null);
                 });
 
             modelBuilder.Entity("IoTPortal.Data.EF.Entities.MeasurementGroupEntity", b =>
@@ -80,7 +80,7 @@ namespace IoTPortal.Data.EF.SQLServer.Migrations
 
                     b.HasIndex("DeviceId");
 
-                    b.ToTable("MeasurementGroups");
+                    b.ToTable("MeasurementGroups", (string)null);
                 });
 
             modelBuilder.Entity("IoTPortal.Data.EF.Entities.MeasurementTypeEntity", b =>
@@ -122,7 +122,7 @@ namespace IoTPortal.Data.EF.SQLServer.Migrations
 
                     b.HasIndex("DeviceId");
 
-                    b.ToTable("MeasurementTypes");
+                    b.ToTable("MeasurementTypes", (string)null);
                 });
 
             modelBuilder.Entity("IoTPortal.Data.EF.Entities.UserDeviceRoleEntity", b =>
@@ -145,7 +145,7 @@ namespace IoTPortal.Data.EF.SQLServer.Migrations
 
                     b.HasIndex("DeviceId");
 
-                    b.ToTable("UserDeviceRoles");
+                    b.ToTable("UserDeviceRoles", (string)null);
                 });
 
             modelBuilder.Entity("IoTPortal.Data.EF.Entities.MeasurementGroupEntity", b =>
